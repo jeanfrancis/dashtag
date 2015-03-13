@@ -4,24 +4,20 @@ var dashtag = dashtag || {}
 
 dashtag.applicationController = function(spec) {
   var that = {};
-  var newPostModels = [];
+  var newPostContent = "";
   var active = false;
-  var renderPostHelper = spec.renderPostHelper;
+  var dateHelper = spec.dateHelper;
   var ajaxService = spec.ajaxService;
   var masonryService = spec.masonryService
 
-  var createPost = function(rawPost) {
-    return new Post(rawPost);
-  };
-
   var renderPostsForTop = function() {
     if(!active) {
-      if($(window).scrollTop() === 0 && newPostModels.length != 0) {
+      if($(window).scrollTop() === 0 && newPostContent.length != 0) {
         active = true;
-        var newPostViewModels = renderPostHelper.createPostContent(newPostModels);
-        $('#posts-list').prepend(newPostViewModels);
+        $('#posts-list').prepend(newPostContent);
         masonryService.layOutMasonry();
-        newPostModels = [];
+        newPostContent = [];
+        dateHelper.replaceTimestamps($(".time-of-post"));
         active = false;
       }
     }
@@ -29,10 +25,7 @@ dashtag.applicationController = function(spec) {
 
   that.setupRenderPost = function() {
     $(ajaxService).on("new-posts", function(e, rawPostData){
-
-      $.each(rawPostData, function(index, rawPost){
-        newPostModels.push(createPost(rawPost));
-      });
+      newPostContent = rawPostData
       renderPostsForTop();
     })
 
@@ -57,22 +50,15 @@ dashtag.applicationController = function(spec) {
     $("#load-posts-btn").on("click", function(){
       ajaxService.getNextPosts();
       $(ajaxService).on("next-posts", function(e, rawPostData){
-
-        $.each(rawPostData, function(index, rawPost){
-          nextPostModels.push(createPost(rawPost));
-        });
-
-        var nextPosts = renderPostHelper.createPostContent(nextPostModels);
-        $('#posts-list').append(nextPosts);
+        $('#posts-list').append(rawPostData);
+        dateHelper.replaceTimestamps($(".time-of-post"));
         masonryService.layOutMasonry();
-        nextPostModels = []
       });
 
       $(ajaxService).on("next-posts:notmodified", function(){
         $("#loading").empty();
         $("#load-posts-btn").text("There are no more posts!");
       });
-
     });
   };
 

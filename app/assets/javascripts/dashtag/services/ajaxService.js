@@ -12,19 +12,18 @@ dashtag.ajaxService = function() {
 
   that.setup = function(){
     var loop = function(){
-
       $.ajax({
         type: "GET",
-        url: "/",
+        url: "/get_latest_posts",
         data: {
         "last_update_time": last_update_time
             },
-        contentType: "application/json; charset=utf-8",
+        contentType: "application/html; charset=utf-8",
         ifModified: true,
-        dataType: "json",
+        dataType: "html",
         success: function(response, status){
           if(status != "notmodified") {
-            $(that).trigger("new-posts", [response]);
+            $(that).trigger("new-posts", response);
             last_update_time = Date.now();
           }
         },
@@ -35,7 +34,6 @@ dashtag.ajaxService = function() {
     };
     loop();
   };
-
   that.getNextPosts = function(){
     $.ajax({
       type: "GET",
@@ -43,9 +41,9 @@ dashtag.ajaxService = function() {
       data: {
         "last_post_id": getLastPostId()
             },
-      contentType: "application/json; charset=utf-8",
+      contentType: "application/html; charset=utf-8",
       ifModified: true,
-      dataType: "json",
+      dataType: "html",
       success: function(response, status){
         if(status != "notmodified") {
           $(that).trigger("next-posts", [response]);

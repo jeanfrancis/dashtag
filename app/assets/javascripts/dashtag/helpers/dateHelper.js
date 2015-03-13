@@ -17,9 +17,10 @@ dashtag.dateHelper = function() {
     return date.concat(timestampDate.toLocaleTimeString());
   };
 
-  that.replaceInitiallyLoadedTimestamps = function(timestamps) {
+  that.replaceTimestamps = function(timestamps) {
     for(var i=0; i < timestamps.length ; i++) {
       var timestampString = $(timestamps[i]).text().trim();
+      if(!timestampString.includes("UTC")) continue;
       var timestampDate = parseDateFromUTC(timestampString);
       $(timestamps[i]).text(that.formatDateToLocalTimezone(timestampDate));
     }

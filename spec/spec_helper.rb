@@ -25,7 +25,8 @@ Capybara.default_driver = :poltergeist
 
 Capybara.register_driver :poltergeist do |app|
   options = {
-    timeout: 120
+    timeout: 120,
+    js_errors: false
   }
   Capybara::Poltergeist::Driver.new(app, options)
 end

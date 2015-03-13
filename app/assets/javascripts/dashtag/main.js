@@ -7,16 +7,15 @@ dashtag.main = function() {
 	var dateHelper = dashtag.dateHelper();
 	var masonryService = dashtag.masonryService();
   var ajaxService = dashtag.ajaxService();
-	var renderPostHelper = dashtag.renderPostHelper({dateHelper : dateHelper});
 	var applicationController = dashtag.applicationController({
-																														renderPostHelper: renderPostHelper,
+																														dateHelper : dateHelper,
 																														ajaxService : ajaxService,
 																														masonryService: masonryService});
 
  	that.run = function(){
  		masonryService.layOutMasonry();
 
-	  dateHelper.replaceInitiallyLoadedTimestamps($(".time-of-post"));
+	  dateHelper.replaceTimestamps($(".time-of-post"));
 
 	  applicationController.setupScroll();
 
